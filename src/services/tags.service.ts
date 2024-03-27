@@ -1,4 +1,4 @@
-export interface Tag {
+interface TagRaw {
 	last_activity_rate: number;
 	has_synonyms: boolean;
 	is_moderator_only: boolean;
@@ -7,24 +7,46 @@ export interface Tag {
 	name: string;
 }
 
+interface StackExchangeWrapper<T> {
+	backoff?: number;
+	error_id?: number;
+	error_message?: string;
+	error_name?: string;
+	has_more: boolean;
+	items: T[];
+	quota_max: number;
+	quota_remaining: number;
+}
+
+export interface Tag {
+	name: string;
+	count: number;
+}
+
+function mapper(data: TagRaw[]): Tag[] {
+	return data.map(({ count, name }) => {
+		return { name: name, count: count };
+	});
+}
+
 class TagsService {
 	private url = "https://api.stackexchange.com/2.3/tags?order=desc&sort=popular&site=stackoverflow";
 
 	constructor() {}
 
-	// getAll = async (page?: number) => {
-	getAll = async () => {
+	getAll = async (page?: number) => {
 		try {
-			const responseRaw = await fetch(this.url);
+			const responseRaw = await fetch(`${this.url}&page=${encodeURIComponent(`${page}`)}`);
 
 			if (!responseRaw.ok) {
 				console.error("respone not ok", responseRaw);
 				return;
 			}
 
-			const response = await responseRaw.json();
-
-			return response;
+			const response = (await responseRaw.json()) as StackExchangeWrapper<TagRaw>;
+			if ("items" in response) {
+				return mapper(response.items);
+			}
 		} catch (e) {
 			console.error("failed to fetch", e);
 		}
