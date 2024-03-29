@@ -1,14 +1,30 @@
-import { Theme } from "@radix-ui/themes";
-import "@radix-ui/themes/styles.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { Theme } from "@radix-ui/themes";
+import "@radix-ui/themes/styles.css";
 import App from "./App.tsx";
+import { TagServiceContext } from "./contexts/TagServiceContext.tsx";
+import { tagsService } from "./services/tags.service.ts";
+import { tagsServiceMock } from "./services/tags.service.mock.ts";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-	<React.StrictMode>
-		<Theme>
-			<App />
-		</Theme>
-	</React.StrictMode>
-);
+async function enableMocking() {
+	if (process.env.NODE_ENV !== "development") {
+		return;
+	}
 
+	const { worker } = await import("./mock.ts");
+
+	return worker.start();
+}
+
+enableMocking().then(() => {
+	ReactDOM.createRoot(document.getElementById("root")!).render(
+		<React.StrictMode>
+			<Theme>
+				<TagServiceContext.Provider value={tagsServiceMock}>
+					<App />
+				</TagServiceContext.Provider>
+			</Theme>
+		</React.StrictMode>
+	);
+});

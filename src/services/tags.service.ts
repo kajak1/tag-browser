@@ -1,5 +1,6 @@
-interface TagRaw {
-	last_activity_rate: number;
+export interface TagRaw {
+	last_activity_date?: number;
+	collectives?: object[];
 	has_synonyms: boolean;
 	is_moderator_only: boolean;
 	is_required: boolean;
@@ -7,7 +8,7 @@ interface TagRaw {
 	name: string;
 }
 
-interface StackExchangeWrapper<T> {
+export interface StackExchangeWrapper<T> {
 	backoff?: number;
 	error_id?: number;
 	error_message?: string;
@@ -19,24 +20,48 @@ interface StackExchangeWrapper<T> {
 }
 
 export interface Tag {
+	index: number;
 	name: string;
 	count: number;
 }
 
-function mapper(data: TagRaw[]): Tag[] {
-	return data.map(({ count, name }) => {
-		return { name: name, count: count };
+export interface SortingOptions {
+	pageSize?: number;
+	order?: "desc" | "asc";
+	sort?: "popular" | "name";
+}
+
+export function mapper(data: TagRaw[]): Tag[] {
+	return data.map(({ count, name }, index) => {
+		return { index: index + 1, name: name, count: count };
 	});
 }
 
-class TagsService {
-	private url = "https://api.stackexchange.com/2.3/tags?order=desc&sort=popular&site=stackoverflow";
+export class TagsService {
+	constructor(private url: string) {
+		this.url = url;
+	}
 
-	constructor() {}
-
-	getAll = async (page?: number) => {
+	getAll = async (page?: number, sortingOptions?: SortingOptions) => {
 		try {
-			const responseRaw = await fetch(`${this.url}&page=${encodeURIComponent(`${page}`)}`);
+			const urlParams = new URLSearchParams("");
+			urlParams.append("page", `${page}`);
+
+			if (sortingOptions?.order) {
+				urlParams.append("order", sortingOptions.order);
+			}
+
+			if (sortingOptions?.sort) {
+				urlParams.append("sort", sortingOptions.sort);
+			} else {
+				urlParams.append("sort", "popular");
+			}
+
+			if (sortingOptions?.pageSize) {
+				urlParams.append("pagesize", `${sortingOptions.pageSize}`);
+			}
+
+			const responseRaw = await fetch(`${this.url}&${urlParams}`);
 
 			if (!responseRaw.ok) {
 				console.error("respone not ok", responseRaw);
@@ -53,4 +78,4 @@ class TagsService {
 	};
 }
 
-export const tagsService = new TagsService();
+export const tagsService = new TagsService("https://api.stackexchange.com/2.3/tags?site=stackoverflow&filter=!bMsg5CXICdlFSp");
