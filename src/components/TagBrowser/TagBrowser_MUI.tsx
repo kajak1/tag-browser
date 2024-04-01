@@ -1,7 +1,7 @@
 import { Box, FormControl, InputLabel, MenuItem, Pagination, PaginationItem, Select } from "@mui/material";
 import { useState } from "react";
 import { useTags } from "../../hooks/use-tags";
-import { SortingOptions } from "../../services/tags.service";
+import { GetAllOptions } from "../../services/tags.service";
 import { TagTable } from "../TagTable";
 
 import { Pagination as OwnPagination, Pagination } from "../Pagination";
@@ -14,7 +14,7 @@ interface TagBrowserProps {
 
 export function TagBrowser({ visibleRows }: TagBrowserProps) {
 	const [selectedPage, setSelectedPage] = useState(1);
-	const [sortingOptions, setSortingOptions] = useState<SortingOptions>({
+	const [sortingOptions, setSortingOptions] = useState<GetAllOptions>({
 		order: "desc",
 		sort: "popular",
 		pageSize: visibleRows,

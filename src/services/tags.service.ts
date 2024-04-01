@@ -8,6 +8,8 @@ export interface TagRaw {
 	name: string;
 }
 
+export type TagRawFiltered = Pick<TagRaw, "name" | "count">;
+
 export interface StackExchangeWrapper<T> {
 	backoff?: number;
 	error_id?: number;
@@ -26,56 +28,65 @@ export interface Tag {
 }
 
 export interface SortingOptions {
-	pageSize?: number;
 	order?: "desc" | "asc";
 	sort?: "popular" | "name";
 }
 
-export function mapper(data: TagRaw[]): Tag[] {
+export interface GetAllOptions extends SortingOptions {
+	pageSize?: number;
+}
+
+export function mapper(data: TagRawFiltered[] | TagRaw[]): Tag[] {
 	return data.map(({ count, name }, index) => {
 		return { index: index + 1, name: name, count: count };
 	});
 }
 
 export class TagsService {
-	constructor(private url: string) {
+	constructor(public readonly url: string) {
 		this.url = url;
 	}
 
-	getAll = async (page?: number, sortingOptions?: SortingOptions) => {
+	getAll = async (page?: number, options?: GetAllOptions): Promise<Tag[]> => {
 		try {
 			const urlParams = new URLSearchParams("");
 			urlParams.append("page", `${page}`);
 
-			if (sortingOptions?.order) {
-				urlParams.append("order", sortingOptions.order);
+			if (options?.order) {
+				urlParams.append("order", options.order);
 			}
 
-			if (sortingOptions?.sort) {
-				urlParams.append("sort", sortingOptions.sort);
+			if (options?.sort) {
+				urlParams.append("sort", options.sort);
 			} else {
 				urlParams.append("sort", "popular");
 			}
 
-			if (sortingOptions?.pageSize) {
-				urlParams.append("pagesize", `${sortingOptions.pageSize}`);
+			if (options?.pageSize) {
+				if (options.pageSize === 0) return [];
+				urlParams.append("pagesize", `${options.pageSize}`);
 			}
 
 			const responseRaw = await fetch(`${this.url}&${urlParams}`);
 
 			if (!responseRaw.ok) {
 				console.error("respone not ok", responseRaw);
-				return;
+				return [];
 			}
 
-			const response = (await responseRaw.json()) as StackExchangeWrapper<TagRaw>;
+			const response = (await responseRaw.json()) as StackExchangeWrapper<TagRawFiltered>;
 			if ("items" in response) {
 				return mapper(response.items);
 			}
+
+			return [];
 		} catch (e) {
 			console.error("failed to fetch", e);
+			return [];
 		}
 	};
 }
 
-export const tagsService = new TagsService("https://api.stackexchange.com/2.3/tags?site=stackoverflow&filter=!bMsg5CXICdlFSp");
+export const tagsService = new TagsService(
+	"https://api.stackexchange.com/2.3/tags?site=stackoverflow&filter=!bMsg5CXICdlFSp"
+);

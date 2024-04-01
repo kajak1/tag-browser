@@ -12,7 +12,7 @@ async function enableMocking() {
 		return;
 	}
 
-	const { worker } = await import("./mock.ts");
+	const { worker } = await import("./mock-worker.ts");
 
 	return worker.start();
 }

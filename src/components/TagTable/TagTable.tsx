@@ -31,14 +31,15 @@ export function TagTable({ loading, visibleRows, tags }: TagTableProps) {
 	);
 }
 
-function TagTableContent({ loading, tags, visibleRows: maxRows }: TagTableProps) {
+function TagTableContent({ loading, tags, visibleRows }: TagTableProps) {
 	if (loading) return <LoadingRow />;
 
 	if (tags.length === 0) return <NoTagsFoundRow />;
 
 	return tags.map((tag, index) => {
 		const rowIndex = index + 1;
-		if (rowIndex > maxRows) return;
+		console.log("visRows TagTableContent", visibleRows);
+		if (rowIndex > visibleRows) return;
 
 		if (loading) return <LoadingRow key={tag.name} />;
 

@@ -1,16 +1,15 @@
 import { Button, DropdownMenu } from "@radix-ui/themes";
-import { useState } from "react";
-import { SortingOptions } from "../../services/tags.service";
+import { GetAllOptions } from "../../services/tags.service";
 
 const { Root, Trigger, Content, Sub, SubContent, SubTrigger, CheckboxItem, TriggerIcon } = DropdownMenu;
 
 interface SortingMenuProps {
-	sortingOptions: SortingOptions;
-	onChange: (options: Pick<SortingOptions, "order" | "sort">) => void;
+	sortingOptions: Pick<GetAllOptions, "order" | "sort">;
+	onChange: (options: Pick<GetAllOptions, "order" | "sort">) => void;
 }
 
 export function SortingMenu({ sortingOptions, onChange }: SortingMenuProps) {
-	function isChecked(field: SortingOptions["sort"], order: SortingOptions["order"]) {
+	function isChecked(field: GetAllOptions["sort"], order: GetAllOptions["order"]) {
 		return sortingOptions.sort === field && sortingOptions.order === order;
 	}
 

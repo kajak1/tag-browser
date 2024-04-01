@@ -17,9 +17,11 @@ export function TagBrowser({ visibleRows }: TagBrowserProps) {
 	const [sortingOptions, setSortingOptions] = useState<SortingOptions>({
 		order: "desc",
 		sort: "popular",
+	});
+	const { tags, isLoading, isValidating, error, mutate } = useTags(currentPage, {
+		...sortingOptions,
 		pageSize: visibleRows,
 	});
-	const { tags, isLoading, isValidating, error, mutate } = useTags(currentPage, sortingOptions);
 
 	function handlePageClick(newPage: number) {
 		setCurrentPage(newPage);
@@ -31,11 +33,7 @@ export function TagBrowser({ visibleRows }: TagBrowserProps) {
 				sortingOptions={sortingOptions}
 				onChange={(options) => setSortingOptions({ ...sortingOptions, order: options.order, sort: options.sort })}
 			/>
-			<TagTable
-				loading={isLoading}
-				tags={tags ?? []}
-				visibleRows={visibleRows === 0 ? defaultVisibleRows : visibleRows}
-			/>
+			<TagTable loading={isLoading} tags={tags ?? []} visibleRows={visibleRows} />
 			<Box pt="3" pr="3">
 				<Pagination size={3} currentPage={currentPage} onPageClick={handlePageClick} />
 			</Box>

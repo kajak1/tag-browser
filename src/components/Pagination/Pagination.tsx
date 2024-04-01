@@ -4,11 +4,11 @@ import { ReactNode } from "react";
 
 interface PaginationProps {
 	currentPage: number;
-	size: number;
-	onPageClick: (page: number) => void;
+	size?: number;
+	onPageClick: (newPage: number) => void;
 }
 
-function generatePages(currentPage: number, size: number): number[] {
+function generatePages(currentPage: number, size: number = 3): number[] {
 	const pageIndex = currentPage - 1;
 
 	const rangeBeginningIndex = Math.floor(pageIndex / size) * size;
@@ -19,10 +19,20 @@ function generatePages(currentPage: number, size: number): number[] {
 }
 
 export function Pagination({ currentPage, onPageClick, size }: PaginationProps) {
+	if (size && size <= 0) {
+		return (
+			<Flex align="center" gap="3">
+				<PageButton type="control" icon={<DoubleArrowLeftIcon />} onClick={() => {}} disabled />
+				<PageButton type="control" icon={<CaretLeftIcon />} onClick={() => {}} disabled />
+				<PageButton type="control" icon={<CaretRightIcon />} onClick={() => {}} disabled />
+			</Flex>
+		);
+	}
+
 	const pages = generatePages(currentPage, size);
 
 	return (
-		<Flex justify="end" align="center" gap="3">
+		<Flex align="center" gap="3">
 			<PageButton
 				type="control"
 				icon={<DoubleArrowLeftIcon />}
@@ -55,7 +65,7 @@ type PageButtonProps =
 function PageButton(props: PageButtonProps) {
 	if (props.type === "control") {
 		return (
-			<Button variant="soft" onClick={props.onClick} style={{ minWidth: "2rem" }} disabled={props.disabled}>
+			<Button variant="soft" onClick={props.onClick} disabled={props.disabled} style={{ minWidth: "2rem" }}>
 				{props.icon}
 			</Button>
 		);
