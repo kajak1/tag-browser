@@ -1,5 +1,6 @@
 import { Flex, Table as RadixTable, ScrollArea, Spinner, Text } from "@radix-ui/themes";
 import { Tag } from "../../services/tags.service";
+import { ReactNode } from "react";
 
 const { Root, Header, Row, Body, ColumnHeaderCell, RowHeaderCell, Cell } = RadixTable;
 
@@ -8,11 +9,12 @@ const defaultRadixTableBorderWidth = "1px";
 
 interface TagTableProps {
 	loading: boolean;
-	tags: Tag[];
 	visibleRows: number;
+	tags: Tag[];
+	callout?: ReactNode;
 }
 
-export function TagTable({ loading, visibleRows, tags }: TagTableProps) {
+export function TagTable({ loading, visibleRows, tags, callout }: TagTableProps) {
 	return (
 		<ScrollArea type="auto" scrollbars="vertical" style={{ maxHeight: tableHeight }}>
 			<Root variant="surface" layout="fixed">
@@ -24,6 +26,11 @@ export function TagTable({ loading, visibleRows, tags }: TagTableProps) {
 					</Row>
 				</Header>
 				<Body>
+					{!loading && callout ? (
+						<Row>
+							<Cell colSpan={3}>{callout}</Cell>
+						</Row>
+					) : null}
 					<TagTableContent loading={loading} visibleRows={visibleRows} tags={tags} />
 				</Body>
 			</Root>
@@ -38,10 +45,7 @@ function TagTableContent({ loading, tags, visibleRows }: TagTableProps) {
 
 	return tags.map((tag, index) => {
 		const rowIndex = index + 1;
-		console.log("visRows TagTableContent", visibleRows);
 		if (rowIndex > visibleRows) return;
-
-		if (loading) return <LoadingRow key={tag.name} />;
 
 		return (
 			<Row key={tag.name}>
@@ -79,7 +83,7 @@ function NoTagsFoundRow() {
 					align="center"
 					justify="center"
 				>
-					<Text>no tags</Text>
+					<Text>no tags found</Text>
 				</Flex>
 			</Cell>
 		</Row>

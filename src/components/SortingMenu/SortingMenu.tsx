@@ -1,22 +1,22 @@
 import { Button, DropdownMenu } from "@radix-ui/themes";
-import { GetAllOptions } from "../../services/tags.service";
+import { GetAllOptions, SortingOptions } from "../../services/tags.service";
 
 const { Root, Trigger, Content, Sub, SubContent, SubTrigger, CheckboxItem, TriggerIcon } = DropdownMenu;
 
 interface SortingMenuProps {
-	sortingOptions: Pick<GetAllOptions, "order" | "sort">;
-	onChange: (options: Pick<GetAllOptions, "order" | "sort">) => void;
+	sortingOptions: SortingOptions;
+	onChange: (options: SortingOptions) => void;
 }
 
 export function SortingMenu({ sortingOptions, onChange }: SortingMenuProps) {
-	function isChecked(field: GetAllOptions["sort"], order: GetAllOptions["order"]) {
-		return sortingOptions.sort === field && sortingOptions.order === order;
+	function isChecked(field: GetAllOptions["field"], order: GetAllOptions["order"]) {
+		return sortingOptions.field === field && sortingOptions.order === order;
 	}
 
 	return (
 		<Root>
 			<Trigger>
-				<Button variant="outline">
+				<Button variant="soft">
 					Sort by
 					<TriggerIcon />
 				</Button>
@@ -30,7 +30,7 @@ export function SortingMenu({ sortingOptions, onChange }: SortingMenuProps) {
 							onClick={() =>
 								onChange({
 									order: "asc",
-									sort: "name",
+									field: "name",
 								})
 							}
 						>
@@ -41,7 +41,7 @@ export function SortingMenu({ sortingOptions, onChange }: SortingMenuProps) {
 							onClick={() =>
 								onChange({
 									order: "desc",
-									sort: "name",
+									field: "name",
 								})
 							}
 						>
@@ -53,22 +53,22 @@ export function SortingMenu({ sortingOptions, onChange }: SortingMenuProps) {
 					<SubTrigger>Posts count</SubTrigger>
 					<SubContent>
 						<CheckboxItem
-							checked={isChecked("popular", "asc")}
+							checked={isChecked("count", "asc")}
 							onClick={() =>
 								onChange({
 									order: "asc",
-									sort: "popular",
+									field: "count",
 								})
 							}
 						>
 							Ascending
 						</CheckboxItem>
 						<CheckboxItem
-							checked={isChecked("popular", "desc")}
+							checked={isChecked("count", "desc")}
 							onClick={() =>
 								onChange({
 									order: "desc",
-									sort: "popular",
+									field: "count",
 								})
 							}
 						>

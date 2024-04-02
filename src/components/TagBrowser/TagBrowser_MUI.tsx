@@ -16,7 +16,7 @@ export function TagBrowser({ visibleRows }: TagBrowserProps) {
 	const [selectedPage, setSelectedPage] = useState(1);
 	const [sortingOptions, setSortingOptions] = useState<GetAllOptions>({
 		order: "desc",
-		sort: "popular",
+		field: "count",
 		pageSize: visibleRows,
 	});
 	// const { tags, isLoading, isValidating, error, mutate } = useTags(selectedPage, sortingOptions);

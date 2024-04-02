@@ -1,0 +1,7 @@
+.rt-TableCell:has(.rt-CalloutRoot) {
+  padding: 0;
+
+  > .rt-CalloutRoot {
+    border-radius: 0;
+  }
+}

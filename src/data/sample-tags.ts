@@ -1570,4 +1570,10 @@ const page3: StackExchangeWrapper<TagRaw> = {
 	quota_remaining: 9989,
 };
 
-export const pages = [page1, page2, page3];
+const pages = [page1, page2, page3];
+
+export function getFakePage(page: number): StackExchangeWrapper<TagRaw> | undefined {
+	if (page <= 0 || page > pages.length) return;
+	
+	return structuredClone(pages[page - 1]);
+}

@@ -21,6 +21,7 @@ enableMocking().then(() => {
 	ReactDOM.createRoot(document.getElementById("root")!).render(
 		<React.StrictMode>
 			<Theme>
+				{/* <TagServiceContext.Provider value={tagsService}> */}
 				<TagServiceContext.Provider value={tagsServiceMock}>
 					<App />
 				</TagServiceContext.Provider>

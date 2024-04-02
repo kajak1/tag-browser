@@ -25,7 +25,7 @@ const meta: Meta<typeof Pagination> = {
 			defaultValue: 3,
 			control: {
 				type: "number",
-				min: 1,
+				min: 0,
 			},
 			table: {
 				type: { summary: "number" },

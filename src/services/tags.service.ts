@@ -28,8 +28,20 @@ export interface Tag {
 }
 
 export interface SortingOptions {
-	order?: "desc" | "asc";
-	sort?: "popular" | "name";
+	order: "desc" | "asc";
+	field: "count" | "name";
+}
+
+export function isOrder(order: string): order is SortingOptions["order"] {
+	if (order === "desc" || order === "asc") return true;
+
+	return false;
+}
+
+export function isField(field: string): field is SortingOptions["field"] {
+	if (field === "count" || field === "name") return true;
+
+	return false;
 }
 
 export interface GetAllOptions extends SortingOptions {
@@ -43,47 +55,55 @@ export function mapper(data: TagRawFiltered[] | TagRaw[]): Tag[] {
 }
 
 export class TagsService {
+	readonly urlParamsMap: Record<SortingOptions["field"], string> = {
+		count: "popular",
+		name: "name",
+	};
+
 	constructor(public readonly url: string) {
 		this.url = url;
 	}
 
-	getAll = async (page?: number, options?: GetAllOptions): Promise<Tag[]> => {
-		try {
-			const urlParams = new URLSearchParams("");
-			urlParams.append("page", `${page}`);
+	protected createSearchParams = (page: number, options?: GetAllOptions): URLSearchParams => {
+		const urlParams = new URLSearchParams("");
+		urlParams.append("page", `${page}`);
 
-			if (options?.order) {
-				urlParams.append("order", options.order);
-			}
-
-			if (options?.sort) {
-				urlParams.append("sort", options.sort);
-			} else {
-				urlParams.append("sort", "popular");
-			}
-
-			if (options?.pageSize) {
-				if (options.pageSize === 0) return [];
-				urlParams.append("pagesize", `${options.pageSize}`);
-			}
-
-			const responseRaw = await fetch(`${this.url}&${urlParams}`);
-
-			if (!responseRaw.ok) {
-				console.error("respone not ok", responseRaw);
-				return [];
-			}
-
-			const response = (await responseRaw.json()) as StackExchangeWrapper<TagRawFiltered>;
-			if ("items" in response) {
-				return mapper(response.items);
-			}
-
-			return [];
-		} catch (e) {
-			console.error("failed to fetch", e);
-			return [];
+		if (options?.order) {
+			urlParams.append("order", options.order);
 		}
+
+		if (options?.field) {
+			urlParams.append("sort", this.urlParamsMap[options.field]);
+		} else {
+			urlParams.append("sort", "popular");
+		}
+
+		if (options?.pageSize) {
+			urlParams.append("pagesize", `${options.pageSize}`);
+		}
+
+		return urlParams;
+	};
+
+	getAll = async (page: number, options?: GetAllOptions): Promise<Tag[]> => {
+		if (options?.pageSize === 0) return [];
+
+		const urlParams = this.createSearchParams(page, options);
+
+		const responseRaw = await fetch(`${this.url}&${urlParams}`);
+
+		if (!responseRaw.ok) {
+			const error = new Error("Fetching data failed");
+			error.message = await responseRaw.json();
+			throw error;
+		}
+
+		const response = (await responseRaw.json()) as StackExchangeWrapper<TagRawFiltered>;
+		if ("items" in response) {
+			return mapper(response.items);
+		}
+
+		return [];
 	};
 }
 

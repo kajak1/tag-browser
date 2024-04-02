@@ -1,11 +1,12 @@
-import { CaretLeftIcon, CaretRightIcon, DoubleArrowLeftIcon } from "@radix-ui/react-icons";
+import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon } from "@radix-ui/react-icons";
 import { Button, Flex } from "@radix-ui/themes";
 import { ReactNode } from "react";
 
 interface PaginationProps {
 	currentPage: number;
-	size?: number;
 	onPageClick: (newPage: number) => void;
+	size?: number;
+	max?: number;
 }
 
 function generatePages(currentPage: number, size: number = 3): number[] {
@@ -19,12 +20,12 @@ function generatePages(currentPage: number, size: number = 3): number[] {
 }
 
 export function Pagination({ currentPage, onPageClick, size }: PaginationProps) {
-	if (size && size <= 0) {
+	if (size !== undefined && size <= 0) {
 		return (
 			<Flex align="center" gap="3">
 				<PageButton type="control" icon={<DoubleArrowLeftIcon />} onClick={() => {}} disabled />
-				<PageButton type="control" icon={<CaretLeftIcon />} onClick={() => {}} disabled />
-				<PageButton type="control" icon={<CaretRightIcon />} onClick={() => {}} disabled />
+				<PageButton type="control" icon={<ChevronLeftIcon />} onClick={() => {}} disabled />
+				<PageButton type="control" icon={<ChevronRightIcon />} onClick={() => {}} disabled />
 			</Flex>
 		);
 	}
@@ -41,14 +42,14 @@ export function Pagination({ currentPage, onPageClick, size }: PaginationProps) 
 			/>
 			<PageButton
 				type="control"
-				icon={<CaretLeftIcon />}
+				icon={<ChevronLeftIcon />}
 				onClick={() => onPageClick(currentPage - 1)}
 				disabled={currentPage === 1}
 			/>
 			{pages.map((page) => {
 				return <PageButton key={page} type="page" page={page} isActive={page === currentPage} onClick={onPageClick} />;
 			})}
-			<PageButton type="control" icon={<CaretRightIcon />} onClick={() => onPageClick(currentPage + 1)} />
+			<PageButton type="control" icon={<ChevronRightIcon />} onClick={() => onPageClick(currentPage + 1)} />
 		</Flex>
 	);
 }

@@ -1,15 +1,15 @@
 import { useMemo } from "react";
-import { defaultVisibleRows } from "../components/TagBrowser";
 import { GetAllOptions, Tag } from "../services/tags.service";
 import { SWR_KEYS } from "../swr-keys";
 import useSWR from "swr";
 import { useTagService } from "../contexts/TagServiceContext";
+import { defaultVisibleRows } from "../store";
 
-export function useTags(page?: number, options?: GetAllOptions) {
+export function useTags(page: number, options?: GetAllOptions) {
 	const service = useTagService();
-		
-	const { data, isLoading, isValidating, error, mutate } = useSWR([SWR_KEYS.TAGS, page, options], ([, page, options]) =>
-		service.getAll(page, options)
+	const { data, isLoading, isValidating, error, mutate } = useSWR(
+		[SWR_KEYS.TAGS, page, options],
+		([, page, options]) => service.getAll(page, options)
 	);
 
 	const paginatedTags = useMemo(() => {

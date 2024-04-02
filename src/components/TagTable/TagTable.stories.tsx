@@ -1,7 +1,12 @@
+import { ReloadIcon } from "@radix-ui/react-icons";
+import { Container, IconButton, Theme } from "@radix-ui/themes";
 import type { Meta, StoryObj } from "@storybook/react";
-
+import { useEffect, useState } from "react";
 import { TagTable } from ".";
-import { Container, Theme } from "@radix-ui/themes";
+import { getFakePage } from "../../data/sample-tags";
+import { mapper } from "../../services/tags.service";
+import { defaultVisibleRows } from "../../store";
+import { TableError } from "../TableError";
 
 const meta: Meta<typeof TagTable> = {
 	component: TagTable,
@@ -9,11 +14,6 @@ const meta: Meta<typeof TagTable> = {
 	parameters: {
 		layout: "centered",
 	},
-	render: ({ loading, visibleRows }) => (
-		<Container maxWidth="50rem">
-			<TagTable loading={loading} tags={[]} visibleRows={visibleRows} />,
-		</Container>
-	),
 	argTypes: {
 		visibleRows: {
 			defaultValue: 30,
@@ -38,11 +38,17 @@ const meta: Meta<typeof TagTable> = {
 				defaultValue: { summary: false },
 			},
 		},
+		callout: {
+			description: "Optional custom Component. Rendered only if passed",
+			control: false,
+		},
 	},
 	decorators: [
 		(Story) => (
 			<Theme style={{ minHeight: "auto" }}>
-				<Story />
+				<Container maxWidth="50rem">
+					<Story />
+				</Container>
 			</Theme>
 		),
 	],
@@ -52,13 +58,104 @@ export default meta;
 
 type Story = StoryObj<typeof TagTable>;
 
-export const Default: Story = {
+type DefaultStory = StoryObj<React.ComponentProps<typeof TagTable> & { renderCallout: boolean }>;
+
+export const Default: DefaultStory = {
 	args: {
 		loading: false,
 		visibleRows: 30,
-		tags: [],
+		tags: mapper(getFakePage(1)?.items ?? []),
+		renderCallout: true,
 	},
-	render: ({ loading, visibleRows, tags }) => (
-		<TagTable loading={loading} tags={[{ index: 1, count: 10, name: "javascript" }]} visibleRows={visibleRows} />
-	),
+	render: ({ loading, tags, visibleRows, renderCallout }) => {
+		const [calloutLoading, isCalloutLoading] = useState(false);
+
+		function handleClick() {
+			isCalloutLoading(true);
+		}
+
+		useEffect(() => {
+			const timeoutId = setTimeout(() => {
+				if (calloutLoading) {
+					isCalloutLoading(false);
+				}
+			}, 1000);
+
+			return () => clearTimeout(timeoutId);
+		}, [calloutLoading]);
+
+		const callout = (
+			<TableError
+				button={
+					<IconButton loading={calloutLoading} variant="soft" size="1" onClick={handleClick}>
+						<ReloadIcon />
+					</IconButton>
+				}
+			/>
+		);
+
+		return (
+			<TagTable
+				loading={loading}
+				tags={tags ?? []}
+				visibleRows={visibleRows}
+				callout={renderCallout ? callout : undefined}
+			/>
+		);
+	},
+};
+
+export const Empty: Story = {
+	render: () => <TagTable loading={false} tags={[]} visibleRows={defaultVisibleRows} />,
+};
+
+export const Loading: Story = {
+	render: () => <TagTable loading={true} tags={[]} visibleRows={defaultVisibleRows} />,
+};
+
+export const Error: Story = {
+	render: () => {
+		return (
+			<TagTable
+				loading={false}
+				tags={[]}
+				visibleRows={30}
+				callout={
+					<TableError
+						button={
+							<IconButton loading={false} variant="soft" size="1" onClick={() => {}}>
+								<ReloadIcon />
+							</IconButton>
+						}
+					/>
+				}
+			/>
+		);
+	},
+};
+
+export const ErrorAndPopulated: Story = {
+	args: {
+		visibleRows: Default.args?.visibleRows,
+		tags: Default.args?.tags,
+	},
+
+	render: ({ visibleRows, tags }) => {
+		return (
+			<TagTable
+				loading={false}
+				tags={tags ?? []}
+				visibleRows={visibleRows}
+				callout={
+					<TableError
+						button={
+							<IconButton loading={false} variant="soft" size="1" onClick={() => {}}>
+								<ReloadIcon />
+							</IconButton>
+						}
+					/>
+				}
+			/>
+		);
+	},
 };
