@@ -3,3 +3,7 @@ export function wait(delay: number) {
 		setTimeout(res, delay);
 	});
 }
+
+export const SWR_KEYS = {
+	TAGS: "tags",
+} as const;

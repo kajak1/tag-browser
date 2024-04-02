@@ -2,8 +2,8 @@ import { http, HttpResponse } from "msw";
 import { setupWorker } from "msw/browser";
 import { getFakePage } from "./data/sample-tags";
 import { wait } from "./utils";
-import { TagRawFiltered, SortingOptions, isOrder, isField } from "./services/tags.service";
 import { tagsServiceMock } from "./services/tags.service.mock";
+import { isOrder, isField, TagRawFiltered, SortingOptions } from "./shared.types";
 
 export const handlers = [
 	http.get(`${tagsServiceMock.url}`, async ({ request }) => {

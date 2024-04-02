@@ -1,51 +1,7 @@
-export interface TagRaw {
-	last_activity_date?: number;
-	collectives?: object[];
-	has_synonyms: boolean;
-	is_moderator_only: boolean;
-	is_required: boolean;
-	count: number;
-	name: string;
-}
-
-export type TagRawFiltered = Pick<TagRaw, "name" | "count">;
-
-export interface StackExchangeWrapper<T> {
-	backoff?: number;
-	error_id?: number;
-	error_message?: string;
-	error_name?: string;
-	has_more: boolean;
-	items: T[];
-	quota_max: number;
-	quota_remaining: number;
-}
-
-export interface Tag {
-	index: number;
-	name: string;
-	count: number;
-}
-
-export interface SortingOptions {
-	order: "desc" | "asc";
-	field: "count" | "name";
-}
-
-export function isOrder(order: string): order is SortingOptions["order"] {
-	if (order === "desc" || order === "asc") return true;
-
-	return false;
-}
-
-export function isField(field: string): field is SortingOptions["field"] {
-	if (field === "count" || field === "name") return true;
-
-	return false;
-}
+import { SortingOptions, TagRawFiltered, TagRaw, Tag, StackExchangeWrapperFiltered } from "../shared.types";
 
 export interface GetAllOptions extends SortingOptions {
-	pageSize?: number;
+	pageSize: number;
 }
 
 export function mapper(data: TagRawFiltered[] | TagRaw[]): Tag[] {
@@ -60,8 +16,12 @@ export class TagsService {
 		name: "name",
 	};
 
-	constructor(public readonly url: string) {
+	constructor(
+		public readonly url: string,
+		private params?: URLSearchParams
+	) {
 		this.url = url;
+		this.params = params ?? new URLSearchParams();
 	}
 
 	protected createSearchParams = (page: number, options?: GetAllOptions): URLSearchParams => {
@@ -90,7 +50,7 @@ export class TagsService {
 
 		const urlParams = this.createSearchParams(page, options);
 
-		const responseRaw = await fetch(`${this.url}&${urlParams}`);
+		const responseRaw = await fetch(`${this.url}?${this.params}&${urlParams}`);
 
 		if (!responseRaw.ok) {
 			const error = new Error("Fetching data failed");
@@ -98,7 +58,7 @@ export class TagsService {
 			throw error;
 		}
 
-		const response = (await responseRaw.json()) as StackExchangeWrapper<TagRawFiltered>;
+		const response = (await responseRaw.json()) as StackExchangeWrapperFiltered<TagRawFiltered>;
 		if ("items" in response) {
 			return mapper(response.items);
 		}
@@ -108,5 +68,6 @@ export class TagsService {
 }
 
 export const tagsService = new TagsService(
-	"https://api.stackexchange.com/2.3/tags?site=stackoverflow&filter=!bMsg5CXICdlFSp"
+	"https://api.stackexchange.com/2.3/tags",
+	new URLSearchParams({ site: "stackoverflow", filter: "!)RaDD.4RNgOBtXX9fkV41th_" })
 );

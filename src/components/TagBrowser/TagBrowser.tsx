@@ -1,5 +1,6 @@
-import { ReloadIcon } from "@radix-ui/react-icons";
-import { Box, Flex, IconButton, Text, TextField } from "@radix-ui/themes";
+import { QuestionMarkCircledIcon, ReloadIcon } from "@radix-ui/react-icons";
+import { Box, Flex, IconButton, Text, TextField, Tooltip } from "@radix-ui/themes";
+import useDebounce from "../../hooks/use-debounce";
 import { useTags } from "../../hooks/use-tags";
 import { defaultVisibleRows, useTableBrowserStore } from "../../store";
 import { Pagination } from "../Pagination";
@@ -7,6 +8,8 @@ import { SortingMenu } from "../SortingMenu";
 import { TableError } from "../TableError";
 import { TagTable } from "../TagTable";
 import "./TagBrowser.css";
+
+const stackExchangeMaxPage_unauthenticated = 25;
 
 export function TagBrowser() {
 	const visibleRows = useTableBrowserStore((state) => state.visibleRows);
@@ -18,9 +21,11 @@ export function TagBrowser() {
 	const sortingOptions = useTableBrowserStore((state) => state.sortingOptions);
 	const changeSortingOptions = useTableBrowserStore((state) => state.changeSortingOptions);
 
+	const debouncedVisibleRows = useDebounce(visibleRows, 1000);
+
 	const { tags, isLoading, error, mutate, isValidating } = useTags(currentPage, {
 		...sortingOptions,
-		pageSize: visibleRows,
+		pageSize: debouncedVisibleRows ?? defaultVisibleRows,
 	});
 
 	const tableCallout = (
@@ -48,7 +53,13 @@ export function TagBrowser() {
 						min={0}
 						value={visibleRows ?? ""}
 						onChange={(e) => changeVisibleRows(e.target.value)}
-					/>
+					>
+						<TextField.Slot side="right">
+							<Tooltip content="Please enter a number">
+								<QuestionMarkCircledIcon />
+							</Tooltip>
+						</TextField.Slot>
+					</TextField.Root>
 				</Flex>
 				<SortingMenu sortingOptions={sortingOptions} onChange={changeSortingOptions} />
 			</Flex>
@@ -59,7 +70,12 @@ export function TagBrowser() {
 				callout={error ? tableCallout : null}
 			/>
 			<Flex mt="3" justify="end">
-				<Pagination size={3} currentPage={currentPage} onPageClick={changeCurrentPage} />
+				<Pagination
+					size={3}
+					currentPage={currentPage}
+					onPageClick={changeCurrentPage}
+					max={stackExchangeMaxPage_unauthenticated}
+				/>
 			</Flex>
 		</Box>
 	);

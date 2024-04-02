@@ -1,6 +1,6 @@
 import { Flex, Table as RadixTable, ScrollArea, Spinner, Text } from "@radix-ui/themes";
-import { Tag } from "../../services/tags.service";
 import { ReactNode } from "react";
+import { Tag } from "../../shared.types";
 
 const { Root, Header, Row, Body, ColumnHeaderCell, RowHeaderCell, Cell } = RadixTable;
 
@@ -20,7 +20,7 @@ export function TagTable({ loading, visibleRows, tags, callout }: TagTableProps)
 			<Root variant="surface" layout="fixed">
 				<Header>
 					<Row>
-						<ColumnHeaderCell width="3rem">#</ColumnHeaderCell>
+						<ColumnHeaderCell width="4rem">#</ColumnHeaderCell>
 						<ColumnHeaderCell>Tag name </ColumnHeaderCell>
 						<ColumnHeaderCell>Posts count</ColumnHeaderCell>
 					</Row>

@@ -1,12 +1,11 @@
 import { createContext, useContext } from "react";
 import { TagsService, tagsService } from "../services/tags.service";
-import { tagsServiceMock } from "../services/tags.service.mock";
 
 interface TagServiceContext {
 	service: TagsService;
 }
 
-export const TagServiceContext = createContext<TagsService>(tagsServiceMock);
+export const TagServiceContext = createContext<TagsService>(tagsService);
 
 export function useTagService() {
 	const service = useContext(TagServiceContext);

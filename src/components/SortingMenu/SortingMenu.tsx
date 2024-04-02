@@ -1,3 +1,4 @@
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { Button, DropdownMenu } from "@radix-ui/themes";
 import { GetAllOptions, SortingOptions } from "../../services/tags.service";
 
@@ -34,7 +35,7 @@ export function SortingMenu({ sortingOptions, onChange }: SortingMenuProps) {
 								})
 							}
 						>
-							{"A -> Z"}
+							A <ArrowRightIcon /> Z
 						</CheckboxItem>
 						<CheckboxItem
 							checked={isChecked("name", "desc")}
@@ -45,7 +46,7 @@ export function SortingMenu({ sortingOptions, onChange }: SortingMenuProps) {
 								})
 							}
 						>
-							{"Z -> A"}
+							Z <ArrowRightIcon /> A
 						</CheckboxItem>
 					</SubContent>
 				</Sub>

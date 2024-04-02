@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { SortingOptions } from "./services/tags.service";
+import { SortingOptions } from "./shared.types";
 
 export const defaultVisibleRows = 30;
 
@@ -18,41 +18,23 @@ interface TableBrowserState {
 export const useTableBrowserStore = create<TableBrowserState & TableBrowserActions>()((set) => ({
 	visibleRows: defaultVisibleRows,
 	changeVisibleRows: (newVisibleRows) => {
-		switch (typeof newVisibleRows) {
-			case "number": {
-				set(() => {
-					return {
-						visibleRows: newVisibleRows,
-					};
-				});
+		if (typeof newVisibleRows === "number") {
+			set(() => ({ visibleRows: newVisibleRows }));
+			return;
+		}
 
-				break;
+		if (typeof newVisibleRows === "string") {
+			if (newVisibleRows === "" || Number(newVisibleRows) < 0) {
+				set(() => ({ visibleRows: undefined }));
+				return;
 			}
 
-			case "string": {
-				if (newVisibleRows === "" || Number(newVisibleRows) < 0) {
-					set(() => {
-						return {
-							visibleRows: undefined,
-						};
-					});
-
-					break;
-				}
-
-				set(() => {
-					return {
-						visibleRows: Number(newVisibleRows),
-					};
-				});
-
-				break;
-			}
+			set(() => ({ visibleRows: Number(newVisibleRows) }));
+			return;
 		}
 	},
 	currentPage: 1,
 	changeCurrentPage: (newPage) => set(() => ({ currentPage: newPage })),
-
 	sortingOptions: {
 		order: "desc",
 		field: "count",

@@ -1,4 +1,10 @@
-import { StackExchangeWrapper, TagRaw } from "../services/tags.service";
+import type { StackExchangeWrapper, TagRaw } from "../shared.types";
+
+export function getFakePage(page: number): StackExchangeWrapper<TagRaw> | undefined {
+	if (page <= 0 || page > pages.length) return;
+
+	return structuredClone(pages[page - 1]);
+}
 
 const page1: StackExchangeWrapper<TagRaw> = {
 	items: [
@@ -1571,9 +1577,3 @@ const page3: StackExchangeWrapper<TagRaw> = {
 };
 
 const pages = [page1, page2, page3];
-
-export function getFakePage(page: number): StackExchangeWrapper<TagRaw> | undefined {
-	if (page <= 0 || page > pages.length) return;
-	
-	return structuredClone(pages[page - 1]);
-}
