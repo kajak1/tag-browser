@@ -1,6 +1,7 @@
 import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon } from "@radix-ui/react-icons";
 import { Button, Flex } from "@radix-ui/themes";
 import { ReactNode } from "react";
+import { generatePages } from ".";
 
 interface PaginationProps {
 	currentPage: number;
@@ -96,23 +97,4 @@ function PaginationDisabled() {
 			<PageButton type="control" icon={<DoubleArrowRightIcon />} onClick={() => {}} disabled />
 		</Flex>
 	);
-}
-
-function generatePages(currentPage: number, size: number = 3, max?: number): number[] {
-	const pageIndex = currentPage - 1;
-
-	const rangeBeginningIndex = Math.floor(pageIndex / size) * size;
-
-	let pages = [...Array(size).fill(0)].map((_, index) => rangeBeginningIndex + index + 1);
-
-	if (max && max > 0) {
-		pages = pages.filter((page) => page <= max);
-		if (pages.length === 1) {
-			for (let i = 1; i < size; i++) {
-				pages.unshift(max - i);
-			}
-		}
-	}
-
-	return pages;
 }

@@ -1,11 +1,9 @@
 import { Flex, Table as RadixTable, ScrollArea, Spinner, Text } from "@radix-ui/themes";
 import { ReactNode, useLayoutEffect, useRef } from "react";
 import { Tag } from "../../shared.types";
+import { defaultRadixTableBorderWidth, maxTableHeight } from ".";
 
 const { Root, Header, Row, Body, ColumnHeaderCell, RowHeaderCell, Cell } = RadixTable;
-
-const tableHeight = "30rem";
-const defaultRadixTableBorderWidth = "1px";
 
 interface TagTableProps {
 	loading: boolean;
@@ -27,7 +25,7 @@ export function TagTable({ loading, visibleRows, tags, callout }: TagTableProps)
 	}, [visibleRows]);
 
 	return (
-		<ScrollArea type="auto" scrollbars="vertical" style={{ maxHeight: tableHeight }}>
+		<ScrollArea type="auto" scrollbars="vertical" style={{ maxHeight: maxTableHeight }}>
 			<Root variant="surface" layout="fixed">
 				<Header>
 					<Row>
@@ -74,7 +72,7 @@ function LoadingRow() {
 			<Cell colSpan={3}>
 				<Flex
 					height={`calc(var(--tag-table-visible-rows) * var(--table-cell-min-height) - 2 * var(--table-cell-padding))`}
-					maxHeight={`calc(${tableHeight} - 2 * var(--table-cell-padding) - var(--table-cell-min-height) - 2 * ${defaultRadixTableBorderWidth})`}
+					maxHeight={`calc(${maxTableHeight} - 2 * var(--table-cell-padding) - var(--table-cell-min-height) - 2 * ${defaultRadixTableBorderWidth})`}
 					align="center"
 					justify="center"
 					gap="3"
@@ -92,7 +90,7 @@ function NoTagsFoundRow() {
 			<Cell colSpan={3} align="center" justify="center">
 				<Flex
 					height={`calc(var(--tag-table-visible-rows) * var(--table-cell-min-height) - 2 * var(--table-cell-padding))`}
-					maxHeight={`calc(${tableHeight} - 2 * var(--table-cell-padding) - var(--table-cell-min-height) - 2 * ${defaultRadixTableBorderWidth})`}
+					maxHeight={`calc(${maxTableHeight} - 2 * var(--table-cell-padding) - var(--table-cell-min-height) - 2 * ${defaultRadixTableBorderWidth})`}
 					align="center"
 					justify="center"
 					gap="3"

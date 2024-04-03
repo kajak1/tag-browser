@@ -1,12 +1,12 @@
 FROM node:18-alpine
-RUN npm install -g pnpm
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml* ./
+COPY package.json package-lock.json ./
 
-RUN pnpm i --frozen-lockfile
+RUN npm ci
 
 COPY . .
 
 EXPOSE 5173
+EXPOSE 6006

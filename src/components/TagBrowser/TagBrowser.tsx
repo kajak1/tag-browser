@@ -3,13 +3,12 @@ import { Box, Flex, IconButton, Text, TextField, Tooltip } from "@radix-ui/theme
 import useDebounce from "../../hooks/use-debounce";
 import { useTags } from "../../hooks/use-tags";
 import { defaultVisibleRows, useTableBrowserStore } from "../../store";
+import { stackExchangeMaxPage_unauthenticated } from "../../utils";
 import { Pagination } from "../Pagination";
 import { SortingMenu } from "../SortingMenu";
 import { TableError } from "../TableError";
 import { TagTable } from "../TagTable";
 import "./TagBrowser.css";
-
-const stackExchangeMaxPage_unauthenticated = 25;
 
 export function TagBrowser() {
 	const visibleRows = useTableBrowserStore((state) => state.visibleRows);

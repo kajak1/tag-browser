@@ -1,6 +1,7 @@
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { Button, DropdownMenu } from "@radix-ui/themes";
-import { GetAllOptions, SortingOptions } from "../../services/tags.service";
+import { GetAllOptions } from "../../services/tags.service";
+import { SortingOptions } from "../../shared.types";
 
 const { Root, Trigger, Content, Sub, SubContent, SubTrigger, CheckboxItem, TriggerIcon } = DropdownMenu;
 

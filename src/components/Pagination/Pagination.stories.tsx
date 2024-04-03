@@ -34,7 +34,7 @@ const meta: Meta<typeof Pagination> = {
 		},
 		max: {
 			description: "Total amount of pages",
-			defaultValue: 100,
+			defaultValue: 90,
 			control: {
 				type: "number",
 			},
@@ -70,6 +70,6 @@ export const Default: Story = {
 	args: {
 		currentPage: 1,
 		size: 3,
-		max: 100,
+		max: 90,
 	},
 };

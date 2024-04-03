@@ -16,11 +16,13 @@ const meta: Meta<Args> = {
 	argTypes: {
 		"sortingOptions.order": {
 			options: ["asc", "desc"],
-			control: { type: "select" },
+			control: { type: "radio" },
+			description: "Control the 'order' of SortingOptions",
 		},
 		"sortingOptions.field": {
 			options: ["count", "name"],
-			control: { type: "select" },
+			control: { type: "radio" },
+			description: "Control the 'field' of SortingOptions"
 		},
 		onChange: {
 			description: "Callback to run on change event",
@@ -28,6 +30,7 @@ const meta: Meta<Args> = {
 		},
 		sortingOptions: {
 			control: false,
+			description: "Object that describes sorting method"
 		},
 	},
 	parameters: {

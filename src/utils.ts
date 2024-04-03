@@ -7,3 +7,5 @@ export function wait(delay: number) {
 export const SWR_KEYS = {
 	TAGS: "tags",
 } as const;
+
+export const stackExchangeMaxPage_unauthenticated = 25;

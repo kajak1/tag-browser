@@ -5,7 +5,6 @@ import "@radix-ui/themes/styles.css";
 import App from "./App.tsx";
 import { TagServiceContext } from "./contexts/TagServiceContext.tsx";
 import { tagsService } from "./services/tags.service.ts";
-import { tagsServiceMock } from "./services/tags.service.mock.ts";
 
 async function enableMocking() {
 	if (process.env.NODE_ENV !== "development") {
