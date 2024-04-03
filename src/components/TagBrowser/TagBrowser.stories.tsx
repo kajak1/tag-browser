@@ -2,6 +2,8 @@ import { Container, Theme } from "@radix-ui/themes";
 import type { Meta, StoryObj } from "@storybook/react";
 import { TagBrowser } from ".";
 import { handlers } from "../../mock-worker";
+import { TagServiceContext } from "../../contexts/TagServiceContext";
+import { tagsServiceMock } from "../../services/tags.service.mock";
 
 const meta: Meta<typeof TagBrowser> = {
 	component: TagBrowser,
@@ -13,7 +15,9 @@ const meta: Meta<typeof TagBrowser> = {
 		(Story) => (
 			<Theme style={{ minHeight: "auto" }}>
 				<Container maxWidth="50rem">
-					<Story />
+					<TagServiceContext.Provider value={tagsServiceMock}>
+						<Story />
+					</TagServiceContext.Provider>
 				</Container>
 			</Theme>
 		),

@@ -9,30 +9,12 @@ interface PaginationProps {
 	max?: number;
 }
 
-function generatePages(currentPage: number, size: number = 3, max?: number): number[] {
-	const pageIndex = currentPage - 1;
-
-	const rangeBeginningIndex = Math.floor(pageIndex / size) * size;
-
-	let pages = [...Array(size).fill(0)].map((_, index) => rangeBeginningIndex + index + 1);
-
-	if (max) {
-		pages = pages.filter((page) => page <= max);
-	}
-
-	return pages;
-}
-
 export function Pagination({ currentPage, onPageClick, size = 3, max }: PaginationProps) {
-	if (size !== undefined && size <= 0) {
-		return (
-			<Flex align="center" gap="3">
-				<PageButton type="control" icon={<DoubleArrowLeftIcon />} onClick={() => {}} disabled />
-				<PageButton type="control" icon={<ChevronLeftIcon />} onClick={() => {}} disabled />
-				<PageButton type="control" icon={<ChevronRightIcon />} onClick={() => {}} disabled />
-				<PageButton type="control" icon={<DoubleArrowRightIcon />} onClick={() => {}} disabled />
-			</Flex>
-		);
+	const isSizeValid = size !== undefined && size <= 0;
+	const isPageOutOfBounds = max && currentPage > max;
+
+	if (isSizeValid || isPageOutOfBounds) {
+		return <PaginationDisabled />;
 	}
 
 	const pages = generatePages(currentPage, size, max);
@@ -60,7 +42,7 @@ export function Pagination({ currentPage, onPageClick, size = 3, max }: Paginati
 				onClick={() => onPageClick(currentPage + 1)}
 				disabled={currentPage === max}
 			/>
-			{max ? (
+			{max && max > 0 ? (
 				<PageButton
 					type="control"
 					icon={<DoubleArrowRightIcon />}
@@ -103,4 +85,34 @@ function PageButton(props: PageButtonProps) {
 			{props.page}
 		</Button>
 	);
+}
+
+function PaginationDisabled() {
+	return (
+		<Flex align="center" gap="3">
+			<PageButton type="control" icon={<DoubleArrowLeftIcon />} onClick={() => {}} disabled />
+			<PageButton type="control" icon={<ChevronLeftIcon />} onClick={() => {}} disabled />
+			<PageButton type="control" icon={<ChevronRightIcon />} onClick={() => {}} disabled />
+			<PageButton type="control" icon={<DoubleArrowRightIcon />} onClick={() => {}} disabled />
+		</Flex>
+	);
+}
+
+function generatePages(currentPage: number, size: number = 3, max?: number): number[] {
+	const pageIndex = currentPage - 1;
+
+	const rangeBeginningIndex = Math.floor(pageIndex / size) * size;
+
+	let pages = [...Array(size).fill(0)].map((_, index) => rangeBeginningIndex + index + 1);
+
+	if (max && max > 0) {
+		pages = pages.filter((page) => page <= max);
+		if (pages.length === 1) {
+			for (let i = 1; i < size; i++) {
+				pages.unshift(max - i);
+			}
+		}
+	}
+
+	return pages;
 }

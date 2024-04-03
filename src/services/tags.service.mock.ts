@@ -1,4 +1,6 @@
-import { GetAllOptions, StackExchangeWrapper, Tag, TagRawFiltered, TagsService, mapper } from "./tags.service";
+import { Tag, StackExchangeWrapper, TagRawFiltered } from "../shared.types";
+import { wait } from "../utils";
+import { TagsService, GetAllOptions, mapper } from "./tags.service";
 
 class TagsServiceMock extends TagsService {
 	constructor(public readonly url: string) {
@@ -7,6 +9,7 @@ class TagsServiceMock extends TagsService {
 
 	override getAll = async (page: number, options?: GetAllOptions): Promise<Tag[]> => {
 		if (options?.pageSize === 0) return [];
+		await wait(1000);
 
 		const urlParams = this.createSearchParams(page, options);
 

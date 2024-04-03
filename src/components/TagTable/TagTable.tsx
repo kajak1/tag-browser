@@ -1,5 +1,5 @@
 import { Flex, Table as RadixTable, ScrollArea, Spinner, Text } from "@radix-ui/themes";
-import { ReactNode } from "react";
+import { ReactNode, useLayoutEffect, useRef } from "react";
 import { Tag } from "../../shared.types";
 
 const { Root, Header, Row, Body, ColumnHeaderCell, RowHeaderCell, Cell } = RadixTable;
@@ -15,6 +15,17 @@ interface TagTableProps {
 }
 
 export function TagTable({ loading, visibleRows, tags, callout }: TagTableProps) {
+	const bodyRef = useRef<HTMLTableSectionElement>(null);
+
+	useLayoutEffect(() => {
+		const tableBody = bodyRef.current;
+		tableBody?.style.setProperty("--tag-table-visible-rows", visibleRows.toString());
+
+		return () => {
+			tableBody?.style.setProperty("--tag-table-visible-rows", "0");
+		};
+	}, [visibleRows]);
+
 	return (
 		<ScrollArea type="auto" scrollbars="vertical" style={{ maxHeight: tableHeight }}>
 			<Root variant="surface" layout="fixed">
@@ -25,7 +36,7 @@ export function TagTable({ loading, visibleRows, tags, callout }: TagTableProps)
 						<ColumnHeaderCell>Posts count</ColumnHeaderCell>
 					</Row>
 				</Header>
-				<Body>
+				<Body ref={bodyRef}>
 					{!loading && callout ? (
 						<Row>
 							<Cell colSpan={3}>{callout}</Cell>
@@ -62,7 +73,8 @@ function LoadingRow() {
 		<Row>
 			<Cell colSpan={3}>
 				<Flex
-					minHeight={`calc(${tableHeight} - 2 * var(--table-cell-padding) - var(--table-cell-min-height) - 2 * ${defaultRadixTableBorderWidth})`}
+					height={`calc(var(--tag-table-visible-rows) * var(--table-cell-min-height) - 2 * var(--table-cell-padding))`}
+					maxHeight={`calc(${tableHeight} - 2 * var(--table-cell-padding) - var(--table-cell-min-height) - 2 * ${defaultRadixTableBorderWidth})`}
 					align="center"
 					justify="center"
 					gap="3"
@@ -79,9 +91,11 @@ function NoTagsFoundRow() {
 		<Row>
 			<Cell colSpan={3} align="center" justify="center">
 				<Flex
-					minHeight={`calc(${tableHeight} - 2 * var(--table-cell-padding) - var(--table-cell-min-height) - 2 * ${defaultRadixTableBorderWidth})`}
+					height={`calc(var(--tag-table-visible-rows) * var(--table-cell-min-height) - 2 * var(--table-cell-padding))`}
+					maxHeight={`calc(${tableHeight} - 2 * var(--table-cell-padding) - var(--table-cell-min-height) - 2 * ${defaultRadixTableBorderWidth})`}
 					align="center"
 					justify="center"
+					gap="3"
 				>
 					<Text>no tags found</Text>
 				</Flex>

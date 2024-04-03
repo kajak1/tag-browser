@@ -26,7 +26,8 @@ export const handlers = [
 		}
 
 		const order = url.searchParams.get("order");
-		const field = url.searchParams.get("sort");
+		const sort = url.searchParams.get("sort");
+		const field: SortingOptions["field"] = sort === "popular" ? "count" : "name";
 
 		if (order && field && isOrder(order) && isField(field)) {
 			sortTags(response.items, field, order);

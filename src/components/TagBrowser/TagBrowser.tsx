@@ -40,7 +40,7 @@ export function TagBrowser() {
 
 	return (
 		<Box>
-			<Flex justify="between" gap="2" mb="3">
+			<Flex justify="between" align="center" gap="2" mb="3">
 				<Flex gap="2" align="center">
 					<Text as="label" size="2" htmlFor="visible-rows-amount">
 						Visible rows:
@@ -69,7 +69,7 @@ export function TagBrowser() {
 				visibleRows={visibleRows ?? defaultVisibleRows}
 				callout={error ? tableCallout : null}
 			/>
-			<Flex mt="3" justify="end">
+			<Flex mt="3" justify={{ initial: "center", xs: "end" }}>
 				<Pagination
 					size={3}
 					currentPage={currentPage}

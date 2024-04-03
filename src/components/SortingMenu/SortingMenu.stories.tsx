@@ -1,8 +1,9 @@
 import { Theme } from "@radix-ui/themes";
 import type { Meta, StoryObj } from "@storybook/react";
 import { SortingMenu } from ".";
-import { GetAllOptions, SortingOptions } from "../../services/tags.service";
 import { useArgs } from "@storybook/preview-api";
+import { SortingOptions } from "../../shared.types";
+import { GetAllOptions } from "../../services/tags.service";
 
 type Args = React.ComponentProps<typeof SortingMenu> & {
 	["sortingOptions.order"]: SortingOptions["order"];
@@ -13,16 +14,20 @@ const meta: Meta<Args> = {
 	component: SortingMenu,
 	tags: ["autodocs"],
 	argTypes: {
-		["sortingOptions.order"]: {
+		"sortingOptions.order": {
 			options: ["asc", "desc"],
 			control: { type: "select" },
 		},
-		["sortingOptions.field"]: {
-			options: ["popular", "name"],
+		"sortingOptions.field": {
+			options: ["count", "name"],
 			control: { type: "select" },
 		},
 		onChange: {
 			description: "Callback to run on change event",
+			control: false,
+		},
+		sortingOptions: {
+			control: false,
 		},
 	},
 	parameters: {
