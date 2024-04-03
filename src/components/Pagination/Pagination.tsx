@@ -6,19 +6,19 @@ import { PageButton } from "./PageButton";
 interface PaginationProps {
 	currentPage: number;
 	onPageClick: (newPage: number) => void;
-	size?: number;
-	max?: number;
+	displayedButtons?: number;
+	total?: number;
 }
 
-export function Pagination({ currentPage, onPageClick, size = 3, max }: PaginationProps) {
-	const isSizeValid = size !== undefined && size <= 0;
-	const isPageOutOfBounds = max && currentPage > max;
+export function Pagination({ currentPage, onPageClick, displayedButtons = 3, total }: PaginationProps) {
+	const areDisplayedButtonsValid = displayedButtons !== undefined && displayedButtons > 0;
+	const isPageOutOfBounds = total ? currentPage > total || currentPage <= 0 : false;
 
-	if (isSizeValid || isPageOutOfBounds) {
+	if (!areDisplayedButtonsValid || isPageOutOfBounds) {
 		return <PaginationDisabled />;
 	}
 
-	const pages = generatePages(currentPage, size, max);
+	const pages = generatePages(currentPage, displayedButtons, total);
 
 	return (
 		<Flex align="center" gap="3">
@@ -41,14 +41,14 @@ export function Pagination({ currentPage, onPageClick, size = 3, max }: Paginati
 				type="control"
 				icon={<ChevronRightIcon />}
 				onClick={() => onPageClick(currentPage + 1)}
-				disabled={currentPage === max}
+				disabled={currentPage === total}
 			/>
-			{max && max > 0 ? (
+			{total && total > 0 ? (
 				<PageButton
 					type="control"
 					icon={<DoubleArrowRightIcon />}
-					onClick={() => onPageClick(max)}
-					disabled={currentPage === max}
+					onClick={() => onPageClick(total)}
+					disabled={currentPage === total}
 				/>
 			) : null}
 		</Flex>

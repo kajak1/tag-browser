@@ -5,7 +5,3 @@ body {
 main {
   padding-top: 2rem;
 }
-
-.visible-rows-amount>.rt-TextFieldInput[type="number"]:user-invalid {
-  color: red
-}

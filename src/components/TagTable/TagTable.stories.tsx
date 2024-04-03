@@ -1,12 +1,12 @@
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { Container, IconButton, Theme } from "@radix-ui/themes";
 import type { Meta, StoryObj } from "@storybook/react";
-import { useEffect, useState } from "react";
 import { TagTable } from ".";
 import { getFakePage } from "../../data/sample-tags";
 import { mapper } from "../../services/tags.service";
 import { defaultVisibleRows } from "../../store";
 import { TableError } from "../TableError";
+import { useEffect, useState } from "@storybook/preview-api";
 
 const meta: Meta<typeof TagTable> = {
 	component: TagTable,
@@ -85,13 +85,11 @@ export const Default: DefaultStory = {
 		}, [calloutLoading]);
 
 		const callout = (
-			<TableError
-				button={
-					<IconButton loading={calloutLoading} variant="soft" size="1" onClick={handleClick}>
-						<ReloadIcon />
-					</IconButton>
-				}
-			/>
+			<TableError text="Error occured while fetching tags">
+				<IconButton loading={calloutLoading} variant="soft" size="1" onClick={handleClick}>
+					<ReloadIcon />
+				</IconButton>
+			</TableError>
 		);
 
 		return (
@@ -121,13 +119,11 @@ export const Error: Story = {
 				tags={[]}
 				visibleRows={30}
 				callout={
-					<TableError
-						button={
-							<IconButton loading={false} variant="soft" size="1" onClick={() => {}}>
-								<ReloadIcon />
-							</IconButton>
-						}
-					/>
+					<TableError text="Error occured while fetching tags">
+						<IconButton loading={false} variant="soft" size="1" onClick={() => {}}>
+							<ReloadIcon />
+						</IconButton>
+					</TableError>
 				}
 			/>
 		);
@@ -147,13 +143,11 @@ export const ErrorAndPopulated: Story = {
 				tags={tags ?? []}
 				visibleRows={visibleRows}
 				callout={
-					<TableError
-						button={
-							<IconButton loading={false} variant="soft" size="1" onClick={() => {}}>
-								<ReloadIcon />
-							</IconButton>
-						}
-					/>
+					<TableError text="Error occured while fetching tags">
+						<IconButton loading={false} variant="soft" size="1" onClick={() => {}}>
+							<ReloadIcon />
+						</IconButton>
+					</TableError>
 				}
 			/>
 		);

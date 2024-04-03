@@ -1,0 +1,3 @@
+.visible-rows-input>.rt-TextFieldInput[type="number"]:user-invalid {
+  color: red
+}

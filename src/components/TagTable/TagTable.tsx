@@ -25,7 +25,7 @@ export function TagTable({ loading, visibleRows, tags, callout }: TagTableProps)
 	}, [visibleRows]);
 
 	return (
-		<ScrollArea type="auto" scrollbars="vertical" style={{ maxHeight: maxTableHeight }}>
+		<ScrollArea type="auto" scrollbars="both" style={{ maxHeight: maxTableHeight, maxWidth: "100%" }}>
 			<Root variant="surface" layout="fixed">
 				<Header>
 					<Row>

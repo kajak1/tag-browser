@@ -1,14 +1,21 @@
 import { Button } from "@radix-ui/themes";
 import { ReactNode } from "react";
 
-type PageButtonProps =
-	| {
-			type: "page";
-			page: number;
-			isActive: boolean;
-			onClick: (page: number) => void;
-	  }
-	| { type: "control"; icon: ReactNode; onClick: () => void; disabled?: boolean };
+interface ButtonPageProps {
+	type: "page";
+	page: number;
+	isActive: boolean;
+	onClick: (page: number) => void;
+}
+
+interface ControlPageProps {
+	type: "control";
+	icon: ReactNode;
+	onClick: () => void;
+	disabled?: boolean;
+}
+
+type PageButtonProps = ButtonPageProps | ControlPageProps;
 
 export function PageButton(props: PageButtonProps) {
 	if (props.type === "control") {

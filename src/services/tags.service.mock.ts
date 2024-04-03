@@ -9,7 +9,7 @@ class TagsServiceMock extends TagsService {
 
 	override getAll = async (page: number, options?: GetAllOptions): Promise<Tag[]> => {
 		if (options?.pageSize === 0) return [];
-		await wait(1000);
+		await wait(600);
 
 		const urlParams = this.createSearchParams(page, options);
 

@@ -20,7 +20,7 @@ const meta: Meta<typeof Pagination> = {
 				defaultValue: { summary: 1 },
 			},
 		},
-		size: {
+		displayedButtons: {
 			description: "Amount of pages displayed",
 			defaultValue: 3,
 			control: {
@@ -32,7 +32,7 @@ const meta: Meta<typeof Pagination> = {
 				defaultValue: { summary: 3 },
 			},
 		},
-		max: {
+		total: {
 			description: "Total amount of pages",
 			defaultValue: 90,
 			control: {
@@ -58,18 +58,25 @@ export default meta;
 type Story = StoryObj<typeof Pagination>;
 
 export const Default: Story = {
-	render: ({ currentPage, size, max }) => {
+	render: ({ currentPage, displayedButtons, total }) => {
 		const [, setArgs] = useArgs();
 
 		function handleClick(newPage: number) {
 			setArgs({ currentPage: newPage });
 		}
 
-		return <Pagination currentPage={currentPage} onPageClick={handleClick} size={size} max={max} />;
+		return (
+			<Pagination
+				currentPage={currentPage}
+				onPageClick={handleClick}
+				displayedButtons={displayedButtons}
+				total={total}
+			/>
+		);
 	},
 	args: {
 		currentPage: 1,
-		size: 3,
-		max: 90,
+		displayedButtons: 3,
+		total: 90,
 	},
 };
