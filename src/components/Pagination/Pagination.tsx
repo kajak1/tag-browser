@@ -1,7 +1,7 @@
 import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon } from "@radix-ui/react-icons";
-import { Button, Flex } from "@radix-ui/themes";
-import { ReactNode } from "react";
+import { Flex } from "@radix-ui/themes";
 import { generatePages } from ".";
+import { PageButton } from "./PageButton";
 
 interface PaginationProps {
 	currentPage: number;
@@ -52,39 +52,6 @@ export function Pagination({ currentPage, onPageClick, size = 3, max }: Paginati
 				/>
 			) : null}
 		</Flex>
-	);
-}
-
-type PageButtonProps =
-	| {
-			type: "page";
-			page: number;
-			isActive: boolean;
-			onClick: (page: number) => void;
-	  }
-	| { type: "control"; icon: ReactNode; onClick: () => void; disabled?: boolean };
-
-function PageButton(props: PageButtonProps) {
-	if (props.type === "control") {
-		return (
-			<Button variant="soft" onClick={props.onClick} disabled={props.disabled} style={{ minWidth: "2rem" }}>
-				{props.icon}
-			</Button>
-		);
-	}
-
-	if (props.page <= 0) {
-		return null;
-	}
-
-	return (
-		<Button
-			onClick={() => props.onClick(props.page)}
-			variant={props.isActive ? "solid" : "outline"}
-			style={{ minWidth: "2rem" }}
-		>
-			{props.page}
-		</Button>
 	);
 }
 
