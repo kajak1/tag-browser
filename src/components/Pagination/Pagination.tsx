@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon } from "@radix-ui/react-icons";
 import { Flex } from "@radix-ui/themes";
-import { generatePages } from ".";
+import { generateButtonsNubers } from ".";
 import { PageButton } from "./PageButton";
 
 interface PaginationProps {
@@ -18,7 +18,7 @@ export function Pagination({ currentPage, onPageClick, displayedButtons = 3, tot
 		return <PaginationDisabled />;
 	}
 
-	const pages = generatePages(currentPage, displayedButtons, total);
+	const buttons = generateButtonsNubers(currentPage, displayedButtons, total);
 
 	return (
 		<Flex align="center" gap="3">
@@ -34,7 +34,7 @@ export function Pagination({ currentPage, onPageClick, displayedButtons = 3, tot
 				onClick={() => onPageClick(currentPage - 1)}
 				disabled={currentPage === 1}
 			/>
-			{pages.map((page) => {
+			{buttons.map((page) => {
 				return <PageButton key={page} type="page" page={page} isActive={page === currentPage} onClick={onPageClick} />;
 			})}
 			<PageButton

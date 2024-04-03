@@ -1,26 +1,26 @@
-export function generatePages(currentPage: number, displayedButtons: number = 3, total?: number): number[] {
+export function generateButtonsNubers(currentPage: number, displayedButtons: number = 3, total?: number): number[] {
 	const pageIndex = currentPage - 1;
 
 	const rangeBeginningIndex = Math.floor(pageIndex / displayedButtons) * displayedButtons;
 
-	let pageNumbers = [...Array(displayedButtons).fill(0)].map((_, index) => rangeBeginningIndex + index + 1);
+	let buttonsNumbers = [...Array(displayedButtons).fill(0)].map((_, index) => rangeBeginningIndex + index + 1);
 
-	if (!total || total <= 0) return pageNumbers;
+	if (!total || total <= 0) return buttonsNumbers;
 
-	pageNumbers = pageNumbers.filter((page) => page <= total);
+	buttonsNumbers = buttonsNumbers.filter((page) => page <= total);
 
-	if (pageNumbers.length === 1) {
-		return fillMissingPages(pageNumbers, displayedButtons, total);
+	if (buttonsNumbers.length === 1) {
+		return fillMissingNumbers(buttonsNumbers, displayedButtons, total);
 	}
 
-	return pageNumbers;
+	return buttonsNumbers;
 }
 
-function fillMissingPages(pageNumbers: number[], size: number, max: number) {
-	const pageNumbersCopy = [...pageNumbers];
+function fillMissingNumbers(buttonsNumbers: number[], size: number, max: number) {
+	const buttonsNumbersCopy = [...buttonsNumbers];
 	for (let i = 1; i < size; i++) {
-		pageNumbersCopy.push(max - i);
+		buttonsNumbersCopy.push(max - i);
 	}
 
-	return pageNumbersCopy.reverse();
+	return buttonsNumbersCopy.reverse();
 }
